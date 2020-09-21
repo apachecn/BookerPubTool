@@ -9,6 +9,9 @@ from os import path
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+with open("requirements.txt", "r", encoding="utf-8") as fh:
+    install_requires = fh.read().splitlines()
+
 for subdir, _, _ in os.walk('PypiBookPublisher'):
     fname = path.join(subdir, '__init__.py')
     open(fname, 'a').close()
