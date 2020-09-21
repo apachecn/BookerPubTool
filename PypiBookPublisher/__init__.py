@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import subprocess as subp
+from datetime import datetime
+import requests
+from pyquery import PyQuery as pq
+import tempfile
+import uuid
+import sys
+import shutil
+import os
+from os import path
+import re
+import stat
+
 """pypi-book-publisher
 https://github.com/apachecn/pypi-book-publisher"""
 
