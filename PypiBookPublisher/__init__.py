@@ -20,7 +20,7 @@ https://github.com/apachecn/pypi-book-publisher"""
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
 __license__ = "SATA"
-__version__ = "2020.9.21.0"
+__version__ = "2020.11.4.0"
 
 
 def rmtree(dir):
