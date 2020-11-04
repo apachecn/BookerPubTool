@@ -53,15 +53,15 @@ def get_desc(md):
     rm = re.search(r'^# (.+?)$', md, re.M)
     return rm.group(1) if rm else ''
 
-def config(un, pw):
+def config(args):
     subp.Popen(
-        ['pip', 'config', 'set', 'pypi.username', un],
+        ['pip', 'config', 'set', 'pypi.username', args.un],
         shell=True,
         stdout=subp.PIPE,
         stderr=subp.PIPE
     ).communicate()
     subp.Popen(
-        ['pip', 'config', 'set', 'pypi.password', pw],
+        ['pip', 'config', 'set', 'pypi.password', args.pw],
         shell=True,
         stdout=subp.PIPE,
         stderr=subp.PIPE
@@ -90,7 +90,8 @@ def get_module_name(name):
     names = [n.capitalize() for n in names]
     return ''.join(names)
     
-def publish(dir):
+def publish(args):
+    dir = args.dir
     if dir.endswith('/') or \
        dir.endswith('\\'):
         dir = dir[:-1]
