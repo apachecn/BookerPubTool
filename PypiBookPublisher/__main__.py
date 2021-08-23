@@ -13,9 +13,8 @@ def main():
     pub_parser.add_argument("dir", help="dir")
     pub_parser.set_defaults(func=publish)
     
-    config_parser = subparsers.add_parser("config", help="configure un and pw")
-    config_parser.add_argument("un", help="un")
-    config_parser.add_argument("pw", help="pw")
+    config_parser = subparsers.add_parser("config", help="configure token")
+    config_parser.add_argument("token", help="token")
     config_parser.set_defaults(func=config)
     
     args = parser.parse_args()

@@ -20,7 +20,7 @@ https://github.com/apachecn/pypi-book-publisher"""
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"
 __license__ = "SATA"
-__version__ = "2020.11.4.0"
+__version__ = "2021.8.24.0"
 
 
 def rmtree(dir):
@@ -55,13 +55,13 @@ def get_desc(md):
 
 def config(args):
     subp.Popen(
-        ['pip', 'config', 'set', 'pypi.username', args.un],
+        ['pip', 'config', 'set', 'pypi.username', '__token__'],
         shell=True,
         stdout=subp.PIPE,
         stderr=subp.PIPE
     ).communicate()
     subp.Popen(
-        ['pip', 'config', 'set', 'pypi.password', args.pw],
+        ['pip', 'config', 'set', 'pypi.password', args.token],
         shell=True,
         stdout=subp.PIPE,
         stderr=subp.PIPE
