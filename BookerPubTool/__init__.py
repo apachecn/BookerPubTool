@@ -67,7 +67,7 @@ def config_pypi(args):
         stderr=subp.PIPE
     ).communicate()
     
-def get_new_version(name, curr=None):
+def get_pypi_new_version(name, curr=None):
     now = datetime.now()
     curr = curr or \
         f'{now.year}.{now.month}.{now.day}'
@@ -83,7 +83,7 @@ def get_new_version(name, curr=None):
     else:
         return int(ver.split('.')[-1]) + 1
     
-def get_module_name(name):
+def get_pypi_module_name(name):
     name = name.replace('_', '-')
     name = re.sub(r'[^\w\-]', '-', name)
     names = filter(None, name.split('-'))
@@ -106,10 +106,10 @@ def publish_pypi(args):
         return
     # 读取元信息
     name = path.basename(dir)
-    mod_name = get_module_name(name)
+    mod_name = get_pypi_module_name(name)
     now = datetime.now()
     ver = f'{now.year}.{now.month}.{now.day}.' + \
-          str(get_new_version(name))
+          str(get_pypi_new_version(name))
     readme = read_file(path.join(dir, 'README.md'), 'utf-8')
     desc = get_desc(readme)
     print(f'name: {name}, mod: {mod_name}, ver: {ver}, desc: {desc}')
