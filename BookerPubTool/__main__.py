@@ -21,6 +21,13 @@ def main():
     pypi_config_parser.add_argument("token", help="token")
     pypi_config_parser.set_defaults(func=config_pypi)
     
+    ebook2site_parser = subparsers.add_parser("ebook2site", help="convert an ebook to a site")
+    ebook2site_parser.add_argument("name", help="name")
+    ebook2site_parser.add_argument("file", help="file")
+    ebook2site_parser.add_argument("-d, --dir", help="dir", default='.')
+    ebook2site_parser.set_defaults(func=ebook2site)
+
+    
     args = parser.parse_args()
     args.func(args)
     

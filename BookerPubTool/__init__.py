@@ -3,6 +3,7 @@
 
 from .pypi import *
 from .docker import *
+from .ebook2site import *
 
 """pypi-book-publisher
 https://github.com/apachecn/pypi-book-publisher"""
