@@ -11,6 +11,30 @@ from os import path
 import re
 import stat
 
+numPinyinMap = {
+    '0': 'ling',
+    '1': 'yi',
+    '2': 'er',
+    '3': 'san',
+    '4': 'si',
+    '5': 'wu',
+    '6': 'liu',
+    '7': 'qi',
+    '8': 'ba',
+    '9': 'jiu',
+}
+
+def npm_filter_name(name):
+    name = re.sub(r'[^\w\-]', '-', name)
+    name = '-'.join(filter(None, name.split('-')))
+    
+    def rep_func(m):
+        s = m.group()
+        return ''.join(numPinyinMap.get(ch, '') for ch in s)
+    
+    name = re.sub(r'\d{2,}', rep_func, name)
+    return name
+
 def rmtree(dir):
     files = os.listdir(dir)
     for f in files:
