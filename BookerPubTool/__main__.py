@@ -21,12 +21,19 @@ def main():
     pypi_config_parser.add_argument("token", help="token")
     pypi_config_parser.set_defaults(func=config_pypi)
     
+    npm_pub_parser = subparsers.add_parser("pub-npm", help="publish book to npm")
+    npm_pub_parser.add_argument("dir", help="dir")
+    npm_pub_parser.set_defaults(func=publish_npm)
+    
+    npm_config_parser = subparsers.add_parser("conf-npm", help="configure npm token")
+    npm_config_parser.add_argument("token", help="token")
+    npm_config_parser.set_defaults(func=config_npm)
+    
     ebook2site_parser = subparsers.add_parser("ebook2site", help="convert an ebook to a site")
     ebook2site_parser.add_argument("name", help="name")
     ebook2site_parser.add_argument("file", help="file")
     ebook2site_parser.add_argument("-d, --dir", help="dir", default='.')
     ebook2site_parser.set_defaults(func=ebook2site)
-
     
     args = parser.parse_args()
     args.func(args)

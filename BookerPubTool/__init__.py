@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .pypi import *
+from .npm import *
 from .docker import *
 from .ebook2site import *
 
