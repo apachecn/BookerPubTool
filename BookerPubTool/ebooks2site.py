@@ -30,7 +30,7 @@ def ebook2site(args):
         )
     else:
         shutil.copy(fname, path.join(proj_dir, 'file.epub'))
-        zip = zipfile.ZipFile(BytesIO(open('epubjs-reader.zip', 'rb').read()))
+        zip = zipfile.ZipFile(BytesIO(open(d('asset/epubjs-reader.zip'), 'rb').read()))
         for f in zip.namelist(): zip.extract(f, proj_dir)
         zip.close()
     title = path.basename(fname).replace('.pdf', '').replace('.epub', '')
