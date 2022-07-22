@@ -9,6 +9,10 @@ def main():
     parser.set_defaults(func=lambda x: parser.print_help())
     subparsers = parser.add_subparsers()
     
+    docker_pub_parser = subparsers.add_parser("pub-docker", help="publish book to dockerhub")
+    docker_pub_parser.add_argument("dir", help="dir")
+    docker_pub_parser.set_defaults(func=publish_docker)
+
     pypi_pub_parser = subparsers.add_parser("pub-pypi", help="publish book to pypi")
     pypi_pub_parser.add_argument("dir", help="dir")
     pypi_pub_parser.set_defaults(func=publish_pypi)

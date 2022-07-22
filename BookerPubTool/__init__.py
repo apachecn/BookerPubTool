@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .pypi import *
+from .docker import *
 
 """pypi-book-publisher
 https://github.com/apachecn/pypi-book-publisher"""
