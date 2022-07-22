@@ -63,8 +63,8 @@ def publish_npm(args):
     pkg_json['name'] = pkg_name
     pkg_json['version'] = ver
     pkg_json['description'] = desc
-    pkg_json['repository']['url'] \ 
-        = f'git+https://github.com/apachecn/{name}.git'
+    pkg_json['repository']['url'] = \
+        f'git+https://github.com/apachecn/{name}.git'
     pkg_json['bin'] = {}
     pkg_json['bin'][pkg_name] = "index.js"
     pkg_json['bin'][name] = "index.js"
