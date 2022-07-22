@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import setuptools
-import PypiBookPublisher
+import BookerPubTool
 import os
 from os import path
 
@@ -12,16 +12,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
 with open("requirements.txt", "r", encoding="utf-8") as fh:
     install_requires = fh.read().splitlines()
 
-for subdir, _, _ in os.walk('PypiBookPublisher'):
+for subdir, _, _ in os.walk('BookerPubTool'):
     fname = path.join(subdir, '__init__.py')
     open(fname, 'a').close()
     
 setuptools.setup(
-    name="pypi-book-publisher",
-    version=PypiBookPublisher.__version__,
-    url="https://github.com/apachecn/pypi-book-publisher",
-    author=PypiBookPublisher.__author__,
-    author_email=PypiBookPublisher.__email__,
+    name="BookerPubTool",
+    version=BookerPubTool.__version__,
+    url="https://github.com/apachecn/BookerPubTool",
+    author=BookerPubTool.__author__,
+    author_email=BookerPubTool.__email__,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Console",
@@ -49,8 +49,8 @@ setuptools.setup(
     python_requires=">=3.6",
     entry_points={
         'console_scripts': [
-            "pypi-book-publisher=PypiBookPublisher.__main__:main",
-            "pybp=PypiBookPublisher.__main__:main",
+            "BookerPubTool=BookerPubTool.__main__:main",
+            "bpt=BookerPubTool.__main__:main",
         ],
     },
     packages=setuptools.find_packages(),
