@@ -53,7 +53,7 @@ def get_desc(md):
     rm = re.search(r'^# (.+?)$', md, re.M)
     return rm.group(1) if rm else ''
 
-def config(args):
+def config_pypi(args):
     subp.Popen(
         ['pip', 'config', 'set', 'pypi.username', '__token__'],
         shell=True,
@@ -90,7 +90,7 @@ def get_module_name(name):
     names = [n.capitalize() for n in names]
     return ''.join(names)
     
-def publish(args):
+def publish_pypi(args):
     dir = args.dir
     if dir.endswith('/') or \
        dir.endswith('\\'):
