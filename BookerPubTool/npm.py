@@ -59,7 +59,7 @@ def publish_npm(args):
           str(get_npm_new_version(name))
     readme = read_file(path.join(dir, 'README.md'), 'utf-8')
     desc = get_desc(readme)
-    print(f'name: {name}, mod: {mod_name}, ver: {ver}, desc: {desc}')
+    print(f'name: {name}, pkg: {pkg_name}, ver: {ver}, desc: {desc}')
     # 创建临时目录
     pkg_dir = path.join(tempfile.gettempdir(), uuid.uuid4().hex)
     os.mkdir(pkg_dir)
