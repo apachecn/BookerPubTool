@@ -21,6 +21,22 @@ def config_npm(args):
         stderr=subp.PIPE
     ).communicate()
     
+def get_npm_new_version(name, curr=None):
+    now = datetime.now()
+    curr = curr or \
+        f'{now.year}.{now.month}{now.day:02d}'
+    r, err = subp.Popen(
+        ['npm', 'view', name, 'versions', '--json'],
+        stdout=subp.PIPE,
+        stderr=subp.PIPE,
+        shell=True
+    ).communicate()
+    if err: return 0
+    j = json.loads(r.decode('utf-8'))
+    j = [it for it in j if it.startswith(curr + '.')]
+    j = [int(it.split('.')[-1]) for it in j]
+    return 0 if len(j) == 0 else max(j) + 1
+    
 def publish_npm(args):
     dir = args.dir
     if dir.endswith('/') or \
@@ -40,7 +56,7 @@ def publish_npm(args):
     pkg_name = npm_filter_name(name)
     now = datetime.now()
     ver = f'{now.year}.{now.month}.{now.day}.' + \
-          str(get_pypi_new_version(name))
+          str(get_npm_new_version(name))
     readme = read_file(path.join(dir, 'README.md'), 'utf-8')
     desc = get_desc(readme)
     print(f'name: {name}, mod: {mod_name}, ver: {ver}, desc: {desc}')
