@@ -16,6 +16,8 @@ def get_docker_latest_fix_ver(name, cur):
         f'{now.year}.{now.month}.{now.day}.'
     url = f'https://registry.hub.docker.com/v2/repositories/{name}/tags/?page_size=100&page=1&name={cur}&ordering=last_updated'
     j = requests.get(url).json()
+    if 'results' not in j:
+        return 0
     fix_vers = [
         int(r['name'].split('.')[-1])
         for r in j['results']
