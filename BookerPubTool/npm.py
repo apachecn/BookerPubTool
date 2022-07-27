@@ -55,7 +55,7 @@ def publish_npm(args):
     name = path.basename(dir)
     pkg_name = npm_filter_name(name)
     now = datetime.now()
-    ver = f'{now.year}.{now.month}.{now.day}.' + \
+    ver = f'{now.year}.{now.month}{now.day:02d}.' + \
           str(get_npm_new_version(name))
     readme = read_file(path.join(dir, 'README.md'), 'utf-8')
     desc = get_desc(readme)
