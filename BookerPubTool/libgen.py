@@ -1,3 +1,4 @@
+import copy
 import requests
 import hashlib
 import os
@@ -180,6 +181,7 @@ def process_dir(args):
     files = os.listdir(dir)
     for f in files:
         f = path.join(dir, f)
+        args = copy.deepcopy(args)
         args.fname = f
         hdlrs.append(pool.submit(process_file_safe, args))
     for h in hdlrs:
