@@ -35,6 +35,13 @@ def main():
     ebook2site_parser.add_argument("-d", "--dir", help="dir", default='.')
     ebook2site_parser.set_defaults(func=ebook2site)
     
+    libgen_parser = subparsers.add_parser("libgen", help="upload to libgen")
+    libgen_parser.add_argument("series", help="series")
+    libgen_parser.add_argument("fname", help="file name")
+    libgen_parser.add_argument("-t", "--threads", type=int, default=3, help="thread count")
+    libgen_parser.add_argument("-p", "--proxy", help="proxy")
+    libgen_parser.set_defaults(func=upload_libgen)
+    
     args = parser.parse_args()
     args.func(args)
     

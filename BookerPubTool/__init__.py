@@ -5,6 +5,7 @@ from .pypi import *
 from .npm import *
 from .docker import *
 from .ebook2site import *
+from .libgen import *
 
 """pypi-book-publisher
 https://github.com/apachecn/pypi-book-publisher"""
