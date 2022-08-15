@@ -51,6 +51,7 @@ setuptools.setup(
         'console_scripts': [
             "BookerPubTool=BookerPubTool.__main__:main",
             "bpt=BookerPubTool.__main__:main",
+            "pub-tool=BookerPubTool.__main__:main",
         ],
     },
     packages=setuptools.find_packages(),
