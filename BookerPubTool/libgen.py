@@ -108,7 +108,8 @@ def get_info(html):
         info['language'] = 'Chinese'
     return info
 
-def process_file(fname):
+def process_file(args):
+    fname = args.fname
     print(fname)
     if not fname.endswith('.pdf') and \
        not fname.endswith('.epub'):
