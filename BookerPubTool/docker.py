@@ -28,10 +28,7 @@ def get_docker_latest_fix_ver(name, cur):
         return max(fix_vers) + 1
 
 def publish_docker(args):
-    dir = args.dir
-    if dir.endswith('/') or \
-       dir.endswith('\\'):
-        dir = dir[:-1]
+    dir = path.abspath(args.dir)
     if not path.exists(dir):
         print('目录不存在')
         return

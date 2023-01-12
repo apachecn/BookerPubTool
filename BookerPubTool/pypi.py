@@ -50,10 +50,7 @@ def get_pypi_module_name(name):
     return ''.join(names)
     
 def publish_pypi(args):
-    dir = args.dir
-    if dir.endswith('/') or \
-       dir.endswith('\\'):
-        dir = dir[:-1]
+    dir = path.abspath(args.dir)
     # 检查目录
     if not path.isdir(dir):
         print('请提供目录')
