@@ -61,6 +61,11 @@ def main():
     zhihu_msg_parser.add_argument("-b", "--wait-403", type=float, default=0, help="how long to wait after HTTP403")
     zhihu_msg_parser.set_defaults(func=send_msg_handle)
     
+    zhihu_uid_parser = subparsers.add_parser("zhihu-crawl-uid", help="crawl zhihu uids from topics")
+    zhihu_uid_parser.add_argument("tid_fname", help="file name including tids")
+    zhihu_uid_parser.add_argument("-u", "--uid-fname", default='uid.txt', help="output file name including uids")
+    zhihu_msg_parser.set_defaults(func=crawl_uids_handle)
+    
     args = parser.parse_args()
     args.func(args)
     
