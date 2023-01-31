@@ -45,8 +45,8 @@ def send_msg_handle(args):
         print(f'uid: {uid}')
         cookie = cookies[ci]
         ci = (ci + 1) % len(cookies)
-        send_msg_v4_old(uid, co, cookie) \ 
-            if args.old else send_msg_v4(uid, co, cookie)
+        if args.old: send_msg_v4_old(uid, co, cookie)
+        else: send_msg_v4(uid, co, cookie)
         if r[0] == 0:
             print(f'{uid} 发送成功')
             sleep_with_print(args.wait_succ)
@@ -149,8 +149,8 @@ def get_aid_by_qid(qid):
             if j['paging']['is_end']:
                 break
             url = j['paging']['next']
-                    except:
-        traceback.print_exc()
+        except:
+            traceback.print_exc()
             break
     return res
         
