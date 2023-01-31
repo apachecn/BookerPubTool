@@ -164,7 +164,7 @@ def sleep_with_print(sec, dur=60):
         print(f'sleep: #{times + 1}')
         time.sleep(rem)
 
-def crawl_uids(args):
+def crawl_uids_handle(args):
     tid_fname = args.tid_fname
     uid_fname = args.uid_fname
     tids = open(tid_fname, encoding='utf8').read()

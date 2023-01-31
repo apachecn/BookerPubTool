@@ -1,7 +1,12 @@
 import argparse
 import sys
 from . import __version__
-from . import *
+from .pypi import *
+from .npm import *
+from .docker import *
+from .ebook2site import *
+from .libgen import *
+from .zhihu_msger import *
 
 def main():
     parser = argparse.ArgumentParser(prog="BookerPubTool", formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -41,6 +46,20 @@ def main():
     libgen_parser.add_argument("-t", "--threads", type=int, default=3, help="thread count")
     libgen_parser.add_argument("-p", "--proxy", help="proxy")
     libgen_parser.set_defaults(func=upload_libgen)
+    
+    zhihu_msg_parser = subparsers.add_parser("zhihu-msg", help="send zhihu messages")
+    zhihu_msg_parser.add_argument("uid_fname", help="file name including uids")
+    zhihu_msg_parser.add_argument(
+        "-m", "--content", 
+        default='布客社区\n\n您永远在线的两性情感和技术变现专家\n\n🔗https://docs.apachecn.org', 
+        help="message content",
+    )
+    zhihu_msg_parser.add_argument("-c", "--cookies", default=os.environ.get('ZHIHU_COOKIES', ''), help="zhihu cookies splited with ';;'")
+    zhihu_msg_parser.add_argument("-o", "--old", action='store_true', help="whether to use old API")
+    zhihu_msg_parser.add_argument("-s", "--wait-succ", type=float, default=60, help="how long to wait after success")
+    zhihu_msg_parser.add_argument("-f", "--wait-fail", type=float, default=0, help="how long to wait after failure except HTTP403")
+    zhihu_msg_parser.add_argument("-b", "--wait-403", type=float, default=0, help="how long to wait after HTTP403")
+    zhihu_msg_parser.set_defaults(func=send_msg_handle)
     
     args = parser.parse_args()
     args.func(args)
