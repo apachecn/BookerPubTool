@@ -88,7 +88,11 @@ def get_qid_by_tid(tid):
     url = f'https://www.zhihu.com/api/v4/topics/{tid}/feeds/top_activity'
     while True:
         print(url)
-        j = requests.get(url, headers=default_hdrs).json()
+        r = requests.get(url, headers=default_hdrs)
+        if r.status_code != 200:
+            print(f'HTTP{r.status_code}: {r.text}')
+            return res
+        j = r.json()
         res += [
             it['target']['question']['id']
             for it in j['data']
