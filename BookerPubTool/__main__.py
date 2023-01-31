@@ -55,7 +55,7 @@ def main():
         help="message content",
     )
     zhihu_msg_parser.add_argument("-c", "--cookies", default=os.environ.get('ZHIHU_COOKIES', ''), help="zhihu cookies splited with ';;'")
-    zhihu_msg_parser.add_argument("-o", "--old", action='store_true', help="whether to use old API")
+    zhihu_msg_parser.add_argument("-n", "--new", action='store_true', help="whether to use new API")
     zhihu_msg_parser.add_argument("-s", "--wait-succ", type=float, default=60, help="how long to wait after success")
     zhihu_msg_parser.add_argument("-f", "--wait-fail", type=float, default=0, help="how long to wait after failure except HTTP403")
     zhihu_msg_parser.add_argument("-b", "--wait-403", type=float, default=0, help="how long to wait after HTTP403")

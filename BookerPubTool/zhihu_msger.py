@@ -45,8 +45,11 @@ def send_msg_handle(args):
         print(f'uid: {uid}')
         cookie = cookies[ci]
         ci = (ci + 1) % len(cookies)
-        if args.old: send_msg_v4_old(uid, co, cookie)
-        else: send_msg_v4(uid, co, cookie)
+        r = (
+            send_msg_v4_old(uid, co, cookie) 
+            if not args.new
+            else send_msg_v4(uid, co, cookie)
+        )
         if r[0] == 0:
             print(f'{uid} 发送成功')
             sleep_with_print(args.wait_succ)
@@ -57,7 +60,7 @@ def send_msg_handle(args):
             else:
                 sleep_with_print(args.wait_fail)
 
-def send_msg(uid, co, cookie):
+def send_msg_v4(uid, co, cookie):
     m = re.search(r'(?<=_xsrf=)\w{8}-\w{4}-\w{4}-\w{4}-\w{12}', cookie)
     token = m.group() if m else ''
     hdrs = default_hdrs.copy()
@@ -65,7 +68,7 @@ def send_msg(uid, co, cookie):
         'Cookie': cookie.strip(),
         'X-Xsrftoken': token,
     })
-    url = 'https://www.zhihu.com/api/v4/chat'
+    url = 'https://www.zhihu.com/api/v4//chat'
     data = {
         'content_type': 0,
         'receiver_id': uid,
