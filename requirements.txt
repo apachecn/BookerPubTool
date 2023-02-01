@@ -2,3 +2,5 @@ requests
 pyquery
 twine
 wheel
+jieba
+xpinyin

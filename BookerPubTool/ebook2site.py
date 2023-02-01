@@ -11,6 +11,7 @@ from io import BytesIO
 from .util import *
 
 def gen_proj_name(name):
+    name = re.sub(r'\.\w+$', '', name)
     seg = re.findall(r'[\u4e00-\u9fff]+|[a-zA-Z0-9]+', name)
     nseg = []
     p = xpinyin.Pinyin()
@@ -34,7 +35,7 @@ def ebook2site(args):
         print('请提供 PDF 或 EPUB')
         return 
     
-    if not name: name = gen_proj_name(name)
+    if not name: name = gen_proj_name(path.basename(fname))
     proj_dir = path.join(dir, name)
     os.mkdir(proj_dir)
     
