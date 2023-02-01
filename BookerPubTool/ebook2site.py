@@ -5,20 +5,36 @@ import shutil
 import sys
 import subprocess as subp
 import zipfile
+import jieba
+import xpinyin
 from io import BytesIO
 from .util import *
 
+def gen_proj_name(name):
+    seg = re.findall(r'[\u4e00-\u9fff]+|[a-zA-Z0-9]+', name)
+    nseg = []
+    p = xpinyin.Pinyin()
+    for s in seg:
+        if re.search(r'[a-zA-Z0-9]', s):
+            nseg.append(s)
+        else:
+            subseg = jieba.cut(s)
+            for ss in subseg:
+                nseg.append(p.get_pinyin(ss).replace('-', ''))
+    res = '-'.join(nseg)
+    return res
 
 def ebook2site(args):
     name = args.name
     fname = args.file
     dir = args.dir
-    
+        
     if not fname.endswith('.pdf') and \
        not fname.endswith('.epub'):
         print('请提供 PDF 或 EPUB')
         return 
     
+    if not name: name = gen_proj_name(name)
     proj_dir = path.join(dir, name)
     os.mkdir(proj_dir)
     
