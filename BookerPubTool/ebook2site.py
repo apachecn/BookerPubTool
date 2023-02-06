@@ -11,7 +11,7 @@ from io import BytesIO
 from .util import *
 
 def gen_proj_name(name):
-    name = re.sub(r'\.\w+$', '', name)
+    name = re.sub(r'\.\w+$', '', name.lower())
     seg = re.findall(r'[\u4e00-\u9fff]+|[a-zA-Z0-9]+', name)
     nseg = []
     p = xpinyin.Pinyin()
