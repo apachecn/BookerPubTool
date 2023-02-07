@@ -11,6 +11,7 @@ from os import path
 import re
 import stat
 from .util import *
+from .ebook2site import ebook2site
 
 def config_pypi(args):
     subp.Popen(

@@ -6,6 +6,7 @@ import subprocess as subp
 import requests
 from datetime import datetime
 from .util import *
+from .ebook2site import ebook2site
 
 DOCKERFILE = '''
 FROM httpd:2.4
