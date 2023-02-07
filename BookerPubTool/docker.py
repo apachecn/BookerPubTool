@@ -50,6 +50,18 @@ def get_docker_latest_fix_ver(name, cur):
 
 def publish_docker(args):
     dir = path.abspath(args.dir)
+    # 预处理文件
+    ext = extname(dir)
+    need_rmdir = False
+    if path.isfile(dir) and \
+       ext in ['pdf', 'epub', 'mobi', 'azw3']:
+        fname = dir
+        dir = path.join(
+            tempfile.gettempdir(), 
+            gen_proj_name(path.basename(dir)),
+        )
+        ebook2site(fname, dir)
+        need_rmdir = True
     if not path.exists(dir):
         print('目录不存在')
         return
@@ -85,4 +97,5 @@ def publish_docker(args):
     ]
     for cmd in cmds:
         subp.Popen(cmd, shell=True).communicate()
-    
+    if need_rmdir: rmtree(dir)
+

@@ -12,6 +12,7 @@ import re
 import stat
 import json
 from .util import *
+from .ebook2site import ebook2site
 
 def config_npm(args):
     subp.Popen(
@@ -55,6 +56,18 @@ def get_npm_fix_version(name, curr=None):
     
 def publish_npm(args):
     dir = path.abspath(args.dir)
+    # 预处理文件
+    ext = extname(dir)
+    need_rmdir = False
+    if path.isfile(dir) and \
+       ext in ['pdf', 'epub', 'mobi', 'azw3']:
+        fname = dir
+        dir = path.join(
+            tempfile.gettempdir(), 
+            gen_proj_name(path.basename(dir)),
+        )
+        ebook2site(fname, dir)
+        need_rmdir = True
     # 检查目录
     if not path.isdir(dir):
         print('请提供目录')
@@ -116,3 +129,4 @@ def publish_npm(args):
     # 删除临时目录
     os.chdir('..')
     rmtree(pkg_dir)
+    if need_rmdir: rmtree(dir)

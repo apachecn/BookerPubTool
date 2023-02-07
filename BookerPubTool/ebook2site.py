@@ -5,32 +5,15 @@ import shutil
 import sys
 import subprocess as subp
 import zipfile
-import jieba
-import xpinyin
 from io import BytesIO
 from .util import *
 
-def gen_proj_name(name):
-    name = re.sub(r'\.\w+$', '', name.lower())
-    seg = re.findall(r'[\u4e00-\u9fff]+|[a-zA-Z0-9]+', name)
-    nseg = []
-    p = xpinyin.Pinyin()
-    for s in seg:
-        if re.search(r'[a-zA-Z0-9]', s):
-            nseg.append(s)
-        else:
-            subseg = jieba.cut(s)
-            for ss in subseg:
-                nseg.append(p.get_pinyin(ss).replace('-', ''))
-    res = '-'.join(nseg)
-    return res
 
 def ebook2site(fname, odir):
     if path.isdir(odir):
         shutil.rmtree(odir)
     os.makedirs(odir)
-    m = re.search(r'\.(\w+)$', fname)
-    ext = m.group(1) if m else ''
+    ext = extname(fname)
     if ext == 'pdf':
         shutil.copy(fname, path.join(odir, 'file.pdf'))
         shutil.copy(

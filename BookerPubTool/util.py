@@ -10,6 +10,8 @@ import os
 from os import path
 import re
 import stat
+import jieba
+import xpinyin
 
 numPinyinMap = {
     '0': 'ling',
@@ -23,6 +25,25 @@ numPinyinMap = {
     '8': 'ba',
     '9': 'jiu',
 }
+
+def extname(fname):
+    m = re.search(r'\.(\w+)$', fname.lower())
+    return m.group(1) if m else ''
+
+def gen_proj_name(name):
+    name = re.sub(r'\.\w+$', '', name.lower())
+    seg = re.findall(r'[\u4e00-\u9fff]+|[a-zA-Z0-9]+', name)
+    nseg = []
+    p = xpinyin.Pinyin()
+    for s in seg:
+        if re.search(r'[a-zA-Z0-9]', s):
+            nseg.append(s)
+        else:
+            subseg = jieba.cut(s)
+            for ss in subseg:
+                nseg.append(p.get_pinyin(ss).replace('-', ''))
+    res = '-'.join(nseg)
+    return res
 
 def npm_filter_name(name):
     name = re.sub(r'[^\w\-]', '-', name)

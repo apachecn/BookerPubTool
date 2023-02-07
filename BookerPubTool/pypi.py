@@ -63,6 +63,18 @@ def get_pypi_module_name(name):
     
 def publish_pypi(args):
     dir = path.abspath(args.dir)
+    # 预处理文件
+    ext = extname(dir)
+    need_rmdir = False
+    if path.isfile(dir) and \
+       ext in ['pdf', 'epub', 'mobi', 'azw3']:
+        fname = dir
+        dir = path.join(
+            tempfile.gettempdir(), 
+            gen_proj_name(path.basename(dir)),
+        )
+        ebook2site(fname, dir)
+        need_rmdir = True
     # 检查目录
     if not path.isdir(dir):
         print('请提供目录')
@@ -140,3 +152,5 @@ def publish_pypi(args):
     # 删除临时目录
     os.chdir('..')
     rmtree(pkg_dir)
+    if need_rmdir: rmtree(dir)
+
