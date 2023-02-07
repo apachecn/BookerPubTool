@@ -31,10 +31,9 @@ def get_npm_last_ver_date(name):
     if err: return '00010101'
     j = json.loads(r.decode('utf-8'))
     vers = [it.split('.')[:-1] for it in j]
-    print(vers)
     vers = [
         it[0].zfill(4) + it[1].zfill(4)
-        for it in j
+        for it in vers
     ]
     return max(vers)
     

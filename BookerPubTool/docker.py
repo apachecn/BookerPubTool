@@ -21,7 +21,7 @@ def get_docker_last_ver_date(name):
     ]
     vers = [
         it[0].zfill(4) + it[1].zfill(2) + it[2].zfill(2)
-        for it in j['results']
+        for it in vers
     ]
     return max(vers)
 
