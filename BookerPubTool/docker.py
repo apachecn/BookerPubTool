@@ -20,6 +20,7 @@ def get_docker_last_ver_date(name):
     vers = [
         r['name'].split('.')[:-1]
         for r in j['results']
+        if re.search(r'\d+\.\d+\.\d+\.\d+', r['name'])
     ]
     vers = [
         it[0].zfill(4) + it[1].zfill(2) + it[2].zfill(2)
