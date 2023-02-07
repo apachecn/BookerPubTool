@@ -31,6 +31,7 @@ def get_npm_last_ver_date(name):
     if err: return '00010101'
     j = json.loads(r.decode('utf-8'))
     vers = [it.split('.')[:-1] for it in j]
+    print(vers)
     vers = [
         it[0].zfill(4) + it[1].zfill(4)
         for it in j
@@ -69,7 +70,7 @@ def publish_npm(args):
     pkg_name = npm_filter_name(name)
     if args.expire:
         last_date = get_npm_last_ver_date(pkg_name)
-        print(f'最新：{last_date}，当前{args.expire}')
+        print(f'最新：{last_date}，当前：{args.expire}')
         if last_date >= args.expire:
             print('最新包未过期，无需发布')
             return
