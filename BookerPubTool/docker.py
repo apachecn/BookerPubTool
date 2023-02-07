@@ -5,6 +5,7 @@ import sys
 import subprocess as subp
 import requests
 from datetime import datetime
+from .util import *
 
 DOCKERFILE = '''
 FROM httpd:2.4
