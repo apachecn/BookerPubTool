@@ -11,7 +11,7 @@ COPY ./ /usr/local/apache2/htdocs/
 '''
 
 def get_docker_last_ver_date(name):
-    url = f'https://registry.hub.docker.com/v2/repositories/{name}/tags/?page_size=100&page=1&name=&ordering=last_updated'
+    url = f'https://hub.docker.com/v2/repositories/apachecn0/{name}/tags/?page_size=100&page=1&ordering=last_updated'
     r = requests.get(url)
     if r.status_code == 404: return '00010101'
     j = r.json()
@@ -31,7 +31,7 @@ def get_docker_latest_fix_ver(name, cur):
     now = datetime.now()
     cur = cur or \
         f'{now.year}.{now.month}.{now.day}.'
-    url = f'https://registry.hub.docker.com/v2/repositories/{name}/tags/?page_size=100&page=1&name={cur}&ordering=last_updated'
+    url = f'https://hub.docker.com/v2/repositories/apachecn0/{name}/tags/?page_size=100&page=1&name={cur}&ordering=last_updated'
     r = requests.get(url)
     if r.status_code == 404: return 0
     j = r.json()
