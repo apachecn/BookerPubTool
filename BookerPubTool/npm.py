@@ -21,7 +21,23 @@ def config_npm(args):
         stderr=subp.PIPE
     ).communicate()
     
-def get_npm_new_version(name, curr=None):
+def get_last_ver_date(name):
+    r, err = subp.Popen(
+        ['npm', 'view', name, 'versions', '--json'],
+        stdout=subp.PIPE,
+        stderr=subp.PIPE,
+        shell=True
+    ).communicate()
+    if err: return '00010101'
+    j = json.loads(r.decode('utf-8'))
+    j = [it.split('.')[:-1] for it in j]
+    j = [
+        it[0].zfill(4) + it[1].zfill(4)
+        for it in j
+    ]
+    return max(j)
+    
+def get_npm_fix_version(name, curr=None):
     now = datetime.now()
     curr = curr or \
         f'{now.year}.{now.month}{now.day:02d}'
@@ -51,9 +67,14 @@ def publish_npm(args):
     # 读取元信息
     name = path.basename(dir)
     pkg_name = npm_filter_name(name)
+    if args.expire:
+        last_date = get_last_ver_date(pkg_name):
+        if last_date >= expire:
+            print('最新包未过期，无需发布')
+            return
+    fix_ver = get_npm_fix_version(pkg_name)
     now = datetime.now()
-    ver = f'{now.year}.{now.month}{now.day:02d}.' + \
-          str(get_npm_new_version(name))
+    ver = f'{now.year}.{now.month}{now.day:02d}.{fix_ver}'
     readme = read_file(path.join(dir, 'README.md'), 'utf-8')
     desc = get_desc(readme)
     print(f'name: {name}, pkg: {pkg_name}, ver: {ver}, desc: {desc}')
