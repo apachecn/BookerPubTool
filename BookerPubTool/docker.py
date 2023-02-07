@@ -62,6 +62,7 @@ def publish_docker(args):
     if args.expire:
         last_date = get_docker_last_ver_date(name)
         if last_date >= args.expire:
+            print(f'最新：{last_date}，当前{args.expire}')
             print('最新包未过期，无需发布')
             return
     now = datetime.now()
