@@ -60,7 +60,7 @@ def publish_docker(args):
         
     name = path.basename(dir).lower()
     if args.expire:
-        last_date = get_docker_last_ver_date(name):
+        last_date = get_docker_last_ver_date(name)
         if last_date >= expire:
             print('最新包未过期，无需发布')
             return

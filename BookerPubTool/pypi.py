@@ -75,7 +75,7 @@ def publish_pypi(args):
     # 读取元信息
     name = path.basename(dir)
     if args.expire:
-        last_date = get_pypi_last_ver_date(name):
+        last_date = get_pypi_last_ver_date(name)
         if last_date >= expire:
             print('最新包未过期，无需发布')
             return
