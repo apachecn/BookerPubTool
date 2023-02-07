@@ -55,6 +55,7 @@ def ebook2site(fname, odir):
     else:
         raise ValueError('文件必须是 PDF、EPUB、MOBI 或 AZW3')
     title = path.basename(fname).replace('.pdf', '').replace('.epub', '')
+    name = path.basename(path.abspath(odir))
     npm_name = npm_filter_name(name)
     README_TMP = read_file(d('asset/readme.tmpl'), 'utf-8')
     README_MD = README_TMP \
