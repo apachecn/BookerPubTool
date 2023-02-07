@@ -26,7 +26,7 @@ def config_pypi(args):
         stderr=subp.PIPE
     ).communicate()
     
-def get_pypi_new_version(name, curr=None):
+def get_pypi_fix_version(name, curr=None):
     now = datetime.now()
     curr = curr or \
         f'{now.year}.{now.month}.{now.day}'
@@ -41,6 +41,18 @@ def get_pypi_new_version(name, curr=None):
         return 0
     else:
         return int(ver.split('.')[-1]) + 1
+    
+def get_pypi_last_ver_date(name):
+    r = requests.get(f'https://pypi.org/project/{name}/')
+    if r.status_code == 404:
+        return '00010101'
+    root = pq(r.text)
+    ver = root('h1.package-header__name')[0] \
+            .text.strip() \
+            .split(' ')[1]
+    ver = ver.split('.')[:-1]
+    return ver[0].zfill(4) + ver[1].zfill(2) + ver[2].zfill(2)
+
     
 def get_pypi_module_name(name):
     name = name.replace('_', '-')
@@ -62,10 +74,15 @@ def publish_pypi(args):
         return
     # 读取元信息
     name = path.basename(dir)
+    if args.expire:
+        last_date = get_pypi_last_ver_date(name):
+        if last_date >= expire:
+            print('最新包未过期，无需发布')
+            return
     mod_name = get_pypi_module_name(name)
     now = datetime.now()
     ver = f'{now.year}.{now.month}.{now.day}.' + \
-          str(get_pypi_new_version(name))
+          str(get_pypi_fix_version(name))
     readme = read_file(path.join(dir, 'README.md'), 'utf-8')
     desc = get_desc(readme)
     print(f'name: {name}, mod: {mod_name}, ver: {ver}, desc: {desc}')
