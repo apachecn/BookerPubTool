@@ -30,12 +30,12 @@ def get_npm_last_ver_date(name):
     ).communicate()
     if err: return '00010101'
     j = json.loads(r.decode('utf-8'))
-    j = [it.split('.')[:-1] for it in j]
-    j = [
+    vers = [it.split('.')[:-1] for it in j]
+    vers = [
         it[0].zfill(4) + it[1].zfill(4)
         for it in j
     ]
-    return max(j)
+    return max(vers)
     
 def get_npm_fix_version(name, curr=None):
     now = datetime.now()

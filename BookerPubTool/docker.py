@@ -10,6 +10,22 @@ FROM httpd:2.4
 COPY ./ /usr/local/apache2/htdocs/
 '''
 
+def get_docker_last_ver_date(name):
+    url = f'https://registry.hub.docker.com/v2/repositories/{name}/tags/?page_size=100&page=1&name={cur}&ordering=last_updated'
+    j = requests.get(url).json()
+    if 'results' not in j:
+        return '00010101'
+    vers = [
+        r['name'].split('.')[:-1]
+        for r in j['results']
+    ]
+    vers = [
+        it[0].zfill(4) + it[1].zfill(2) + it[2].zfill(2)
+        for it in j['results']
+    ]
+    return max(vers)
+
+
 def get_docker_latest_fix_ver(name, cur):
     now = datetime.now()
     cur = cur or \
@@ -43,6 +59,11 @@ def publish_docker(args):
         open(path.join(dir, 'Dockerfile'), 'w').write(DOCKERFILE)
         
     name = path.basename(dir).lower()
+    if args.expire:
+        last_date = get_docker_last_ver_date(name):
+        if last_date >= expire:
+            print('最新包未过期，无需发布')
+            return
     now = datetime.now()
     ver = f'{now.year}.{now.month}.{now.day}.'
     fix_ver = get_docker_latest_fix_ver(
