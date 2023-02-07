@@ -69,7 +69,7 @@ def publish_npm(args):
     pkg_name = npm_filter_name(name)
     if args.expire:
         last_date = get_npm_last_ver_date(pkg_name)
-        if last_date >= expire:
+        if last_date >= args.expire:
             print('最新包未过期，无需发布')
             return
     fix_ver = get_npm_fix_version(pkg_name)

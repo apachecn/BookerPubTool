@@ -76,7 +76,7 @@ def publish_pypi(args):
     name = path.basename(dir)
     if args.expire:
         last_date = get_pypi_last_ver_date(name)
-        if last_date >= expire:
+        if last_date >= args.expire:
             print('最新包未过期，无需发布')
             return
     mod_name = get_pypi_module_name(name)
