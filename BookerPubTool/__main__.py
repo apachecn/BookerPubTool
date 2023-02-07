@@ -41,7 +41,7 @@ def main():
     ebook2site_parser.add_argument("file", help="file")
     ebook2site_parser.add_argument("-n", "--name", help="name")
     ebook2site_parser.add_argument("-d", "--dir", help="dir", default='.')
-    ebook2site_parser.set_defaults(func=ebook2site)
+    ebook2site_parser.set_defaults(func=ebook2site_handle)
     
     libgen_parser = subparsers.add_parser("libgen", help="upload to libgen")
     libgen_parser.add_argument("series", help="series")
