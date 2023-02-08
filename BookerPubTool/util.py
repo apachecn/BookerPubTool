@@ -43,6 +43,7 @@ def gen_proj_name(name):
             for ss in subseg:
                 nseg.append(p.get_pinyin(ss).replace('-', ''))
     res = '-'.join(nseg)
+    if re.search(r'^\d', res): res = 'x' + res
     return res
 
 def npm_filter_name(name):
