@@ -17,7 +17,8 @@ def get_docker_last_ver_date(name, org='apachecn0'):
     url = f'https://hub.docker.com/v2/repositories/{org}/{name}/tags/?page_size=100&page=1&ordering=last_updated'
     r = requests.get(url)
     if r.status_code == 404: return '00010101'
-    j = r.json()
+    try: j = r.json()
+    except: return '00010101'
     if 'results' not in j:
         return '00010101'
     vers = [
@@ -38,7 +39,8 @@ def get_docker_latest_fix_ver(name, org='apachecn0', cur=None):
     url = f'https://hub.docker.com/v2/repositories/{org}/{name}/tags/?page_size=100&page=1&name={cur}&ordering=last_updated'
     r = requests.get(url)
     if r.status_code == 404: return 0
-    j = r.json()
+    try: j = r.json()
+    except: return 0
     if 'results' not in j:
         return 0
     fix_vers = [
