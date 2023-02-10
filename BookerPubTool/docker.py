@@ -29,7 +29,7 @@ def get_docker_last_ver_date(name, org='apachecn0'):
         it[0].zfill(4) + it[1].zfill(2) + it[2].zfill(2)
         for it in vers
     ]
-    return max(vers)
+    return max(vers) if vers else '00010101'
 
 def get_docker_latest_fix_ver(name, org='apachecn0', cur=None):
     now = datetime.now()
