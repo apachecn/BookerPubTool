@@ -2,6 +2,7 @@ import subprocess as subp
 import re
 from os import path
 import uuid
+import platform
 
 def is_git_repo(dir):
     return path.isdir(dir) and \
@@ -116,6 +117,8 @@ def get_all_branches(dir):
     return branches
 
 def get_branch_cids(dir, *branches):
+    if platform.system().lower() == 'windows':
+        branches = [b.replace('^', '^^') for b in branches]
     l = subp.Popen(
         ['git', 'log', *branches],
         shell=True, cwd=dir,
