@@ -164,7 +164,7 @@ def git_push_per_commit(args):
         cids = get_branch_cids(dir, work_branch)
     else:
         # 拉取远程分支，并重命名
-        remote_branch = 'tmp-' + uuid.uuid4().hex
+        remote_branch = f'{remote}-{work_branch}-{uuid.uuid4().hex}'
         subp.Popen(
             ['git', 'fetch', remote, f'{work_branch}:{remote_branch}'],
             shell=True, cwd=dir,
@@ -173,6 +173,7 @@ def git_push_per_commit(args):
         cids = get_branch_cids(dir, remote_branch, '^' + work_branch)
         if cids:
             print('远程仓库有新的提交，需要手动 git pull')
+            print('\n'.join(cids))
             return
         # 查看本地库的新提交
         cids = get_branch_cids(dir, work_branch, '^' + remote_branch)
