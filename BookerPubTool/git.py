@@ -1,6 +1,7 @@
 import subprocess as subp
 import re
 from os import path
+import uuid
 
 def is_git_repo(dir):
     return path.isdir(dir) and \
@@ -128,6 +129,7 @@ def git_push_per_commit(args):
     dir = args.dir
     work_branch = args.branch
     remote = args.remote
+    print(f'branch: {work_branch}, remote: {remote}')
     if not is_git_repo(dir):
         print('请提供 GIT 本地仓库')
         return
