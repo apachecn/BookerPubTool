@@ -174,7 +174,7 @@ def git_push_per_commit(args):
             return
         # 查看本地库的新提交
         cids = get_branch_cids(dir, work_branch, '^' + remote_branch)
-    for cid in cids:
+    for cid in cids[::-1]:
         cid_branch = 'cid-' + cid
         cmds = [
             # 复制工作分支以免搞坏
