@@ -155,7 +155,7 @@ def git_push_per_commit(args):
     branches = get_all_branches(dir)
     remote_exi =  f'remotes/{remote}/{work_branch}' in branches
     if not remote_exi:
-    # 如果远程分支不存在，推送本地分支所有提交
+        # 如果远程分支不存在，推送本地分支所有提交
         cids = get_branch_cids(dir, work_branch)
     else:
         # 拉取远程分支，并重命名

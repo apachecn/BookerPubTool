@@ -7,6 +7,7 @@ from .docker import *
 from .ebook2site import *
 from .libgen import *
 from .zhihu_msger import *
+from .git import *
 
 def main():
     parser = argparse.ArgumentParser(prog="BookerPubTool", formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -69,6 +70,20 @@ def main():
     zhihu_uid_parser.add_argument("-u", "--uid-fname", default='uid.txt', help="output file name including uids")
     zhihu_uid_parser.set_defaults(func=crawl_uids_handle)
     
+    git_init_parser = subparsers.add_parser("git-init", help="init git repo")
+    git_init_parser.add_argument("dir", help="git repo dir")
+    git_init_parser.add_argument("-o", "--origin", help="remote origin url")
+    git_init_parser.set_defaults(func=git_init)
+
+    git_commit_parser = subparsers.add_parser("git-commit", help="git commit per file")
+    git_commit_parser.add_argument("dir", help="git repo dir")
+    git_commit_parser.set_defaults(func=git_commit_per_file)
+
+    git_push_parser = subparsers.add_parser("git-push", help="git push per commit")
+    git_push_parser.add_argument("dir", help="git repo dir")
+    git_push_parser.add_argument("-r", "--remote", default='origin', help="remote repo to push")
+    git_push_parser.set_defaults(func=git_push_per_commit)
+
     args = parser.parse_args()
     args.func(args)
     
