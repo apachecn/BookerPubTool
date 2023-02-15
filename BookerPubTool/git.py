@@ -1,0 +1,177 @@
+import subprocess as subp
+import re
+from os import path
+
+def is_git_repo(dir):
+    return path.isdir(dir) and \
+        path.isdir(path.join(dir, '.git'))
+
+def get_remote_names(dir):
+    return subp.Popen(
+        'git remote',
+        shell=True, cwd=dir,
+        stdout=subp.PIPE,
+        stderr=subp.PIPE,
+    ).communicate()[0].decode('utf8').split('\n')
+
+def git_set_remote(dir, name, url):
+    # 判断是否有远程库
+    remotes = get_remote_names(dir)
+    if name in remotes:
+        cmd = ['git', 'remote', 'set-url', name, url]
+    else:
+        cmd = ['git', 'remote', 'add', name, url]
+    subp.Popen(cmd, shell=True, cwd=dir).communicate()
+
+def get_set_origin(dir, origin):
+    git_set_remote(dir, 'origin', origin)
+
+def get_status(dir):
+    lines = subp.Popen(
+        'git status -s -u',
+        shell=True, cwd=dir,
+        stdout=subp.PIPE,
+        stderr=subp.PIPE,
+    ).communicate()[0].decode('utf8').split('\n')
+    status_map = {}
+    for l in lines:
+        tp = l[:2].strip()
+        f = l[3:]
+        if f.startswith('"') and f.endswith('"'):
+            f = f[1:-1]
+        status_map.setdefault(tp, [])
+        status_map[tp].append(f)
+    return status_map
+
+def get_untracked_files(dir):
+    return get_status(dir).get('??', [])
+            
+def config_utf8_unquote():
+    subp.Popen(
+        'git config --global core.quotepath false', 
+        shell=True
+    ).communicate()
+            
+def git_init(args):
+    dir = args.dir
+    origin = args.origin
+    if not path.isdir(dir):
+        print('请提供目录')
+        return
+    # 检查是否是 GIT 本地仓库，不是则初始化
+    if not path.isdir(path.join(dir, '.git')):
+        subp.Popen(
+            'git init',
+            shell=True, cwd=dir,
+        ).communicate()
+        # 创建空提交来保证能够执行所有操作
+        subp.Popen(
+            'git commit -m init --allow-empty',
+            shell=True, cwd=dir,
+        ).communicate()
+    # 如果提供了 Origin 远程地址则设置
+    if origin: git_set_origin(dir, origin)
+
+def git_commit_per_file(args):
+    dir = args.dir
+    if not is_git_repo(dir):
+        print('请提供 GIT 本地仓库')
+        return
+    # 配置 UTF8 不转义
+    config_utf8_unquote()
+    # 列出所有未跟踪的文件
+    files = get_untracked_files(dir)
+    # 对于所有未跟踪的文件，单独提交
+    for f in files:
+        cmds = [
+            ['git', 'add', f],
+            ['git', 'commit', '-m', f'add {f}'],
+        ]
+        for cmd in cmds:
+            subp.Popen(cmd, shell=True, cwd=dir).communicate()
+
+def ext_cid_from_gitlog(log):
+    return re.findall(r'commit (\w{32})', log)
+
+def get_cur_branch(dir):
+    return subp.Popen(
+        'git branch --show-current', 
+        shell=True, cwd=dir,
+        stdout=subp.PIPE,
+        stderr=subp.PIPE,
+    ).communicate()[0].decode('utf8')
+
+def get_all_branches(dir):
+    branches = subp.Popen(
+        ['git', 'branch', '-a'],
+        shell=True, cwd=dir,
+        stdout=subp.PIPE,
+        stderr=subp.PIPE,
+    ).communicate()[0].decode('utf8').split('\n')
+    branches = [b[3:] for b in branches]
+    return branches
+
+def get_branch_cids(dir, *branches):
+    l = subp.Popen(
+        ['git', 'log', *branches],
+        shell=True, cwd=dir,
+        stdout=subp.PIPE,
+        stderr=subp.PIPE,
+    ).communicate()[0].decode('utf8')
+    return ext_cid_from_gitlog(l)
+
+def git_push_per_commit(args):
+    dir = args.dir
+    remote = args.remote
+    if not is_git_repo(dir):
+        print('请提供 GIT 本地仓库')
+        return
+        
+    # 如果远程仓库名为地址，创建别名
+    if remote.startswith('https://') or \
+        remote.startswith('git@'):
+            url, remote = remote, uuid.uuid4().hex
+            subp.Popen(
+                ['git', 'remote', 'add', remote, url],
+                shell=True, cwd=dir,
+            ).communicate()
+            
+    # 获取当前分支名称
+    work_branch = get_cur_branch(dir)
+    # 检查远程库是否有该分支
+    subp.Popen(
+        ['git', 'remote', 'update', remote],
+        shell=True, cwd=dir,
+    ).communicate()
+    branches = get_all_branches(dir)
+    remote_exi =  f'remotes/{remote}/{work_branch}' in branches
+    if not remote_exi:
+    # 如果远程分支不存在，推送本地分支所有提交
+        cids = get_branch_cids(dir, work_branch)
+    else:
+        # 拉取远程库，并重命名
+        remote_branch = 'tmp-' + uuid.uuid4().hex
+        subp.Popen(
+            ['git', 'fetch', remote, f'{work_branch}:{remote_branch}'],
+            shell=True, cwd=dir,
+        ).communicate()
+        # 查看远程库是否有新提交
+        cids = get_branch_cids(dir, remote_branch, '^' + work_branch)
+        if cids:
+            print('远程仓库有新的提交，需要手动 git pull')
+            return
+        # 查看本地库的新提交
+        cids = get_branch_cids(dir, work_branch, '^' + remote_branch)
+    for cid in cids:
+        cid_branch = 'cid-' + cid
+        cmds = [
+            # 复制工作分支以免搞坏
+            ['git', 'branch', '-C', work_branch, cid_branch],
+            # 切换分支并回滚提交
+            ['git', 'checkout', cid_branch, '-f'], 
+            ['git', 'reset', cid, '--hard'],
+            # 提交改动
+            ['git', 'push', remote, f'{cid_branch}:{work_branch}'],
+        ]
+        for cmd in cmds:
+            subp.Popen(cmd, shell=True, cwd=dir).communicate()
