@@ -14,7 +14,7 @@ def get_remote_names(dir):
         stderr=subp.PIPE,
     ).communicate()[0].decode('utf8').split('\n')
 
-def git_set_remote(dir, name, url):
+def set_remote(dir, name, url):
     # 判断是否有远程库
     remotes = get_remote_names(dir)
     if name in remotes:
@@ -22,9 +22,7 @@ def git_set_remote(dir, name, url):
     else:
         cmd = ['git', 'remote', 'add', name, url]
     subp.Popen(cmd, shell=True, cwd=dir).communicate()
-
-def get_set_origin(dir, origin):
-    git_set_remote(dir, 'origin', origin)
+    
 
 def get_status(dir):
     lines = subp.Popen(
@@ -52,6 +50,7 @@ def config_utf8_unquote():
         shell=True
     ).communicate()
             
+# 初始化仓库
 def git_init(args):
     dir = args.dir
     origin = args.origin
@@ -64,14 +63,18 @@ def git_init(args):
             'git init',
             shell=True, cwd=dir,
         ).communicate()
+    # 检查是否存在分支
+    branches = get_all_branches(dir)
+    if not branches:
         # 创建空提交来保证能够执行所有操作
         subp.Popen(
             'git commit -m init --allow-empty',
             shell=True, cwd=dir,
         ).communicate()
     # 如果提供了 Origin 远程地址则设置
-    if origin: git_set_origin(dir, origin)
+    if origin: set_remote(dir, 'origin', origin)
 
+# 将未跟踪文件一个一个添加并提交
 def git_commit_per_file(args):
     dir = args.dir
     if not is_git_repo(dir):
@@ -120,6 +123,7 @@ def get_branch_cids(dir, *branches):
     ).communicate()[0].decode('utf8')
     return ext_cid_from_gitlog(l)
 
+# 逐个推送提交
 def git_push_per_commit(args):
     dir = args.dir
     remote = args.remote
@@ -135,6 +139,11 @@ def git_push_per_commit(args):
                 ['git', 'remote', 'add', remote, url],
                 shell=True, cwd=dir,
             ).communicate()
+    # 检查远程库是否存在
+    remotes = get_remote_names(dir)
+    if remote not in remotes:
+        print(f'远程仓库 {remote} 不存在')
+        return
             
     # 获取当前分支名称
     work_branch = get_cur_branch(dir)
@@ -149,7 +158,7 @@ def git_push_per_commit(args):
     # 如果远程分支不存在，推送本地分支所有提交
         cids = get_branch_cids(dir, work_branch)
     else:
-        # 拉取远程库，并重命名
+        # 拉取远程分支，并重命名
         remote_branch = 'tmp-' + uuid.uuid4().hex
         subp.Popen(
             ['git', 'fetch', remote, f'{work_branch}:{remote_branch}'],
