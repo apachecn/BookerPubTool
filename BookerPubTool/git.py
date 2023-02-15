@@ -94,7 +94,7 @@ def git_commit_per_file(args):
             subp.Popen(cmd, shell=True, cwd=dir).communicate()
 
 def ext_cid_from_gitlog(log):
-    return re.findall(r'commit (\w{32})', log)
+    return re.findall(r'commit (\w+)', log)
 
 def get_cur_branch(dir):
     return subp.Popen(
@@ -175,16 +175,13 @@ def git_push_per_commit(args):
         # 查看本地库的新提交
         cids = get_branch_cids(dir, work_branch, '^' + remote_branch)
     for cid in cids[::-1]:
-        # cid_branch = 'cid-' + cid
+        cid_branch = 'cid-' + cid
         cmds = [
-            # 复制工作分支以免搞坏
-            # ['git', 'branch', '-C', work_branch, cid_branch],
-            # 切换分支并回滚提交
+            # 切换分支
             ['git', 'checkout', cid, '-f'], 
-            # ['git', 'reset', cid, '--hard'],
+            ['git', 'branch', cid_branch],
             # 提交改动
-            # ['git', 'push', remote, f'{cid_branch}:{work_branch}'],
-            ['git', 'push', remote, f'{cid}:{work_branch}'],
+            ['git', 'push', remote, f'{cid_branch}:{work_branch}'],
         ]
         for cmd in cmds:
             subp.Popen(cmd, shell=True, cwd=dir).communicate()
