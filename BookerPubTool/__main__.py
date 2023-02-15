@@ -82,6 +82,7 @@ def main():
     git_push_parser = subparsers.add_parser("git-push", help="git push per commit")
     git_push_parser.add_argument("dir", help="git repo dir")
     git_push_parser.add_argument("-r", "--remote", default='origin', help="remote repo to push")
+    git_push_parser.add_argument("-b", "--branch", default='master', help="branch to push")
     git_push_parser.set_defaults(func=git_push_per_commit)
 
     args = parser.parse_args()

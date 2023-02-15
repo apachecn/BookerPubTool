@@ -126,11 +126,16 @@ def get_branch_cids(dir, *branches):
 # 逐个推送提交
 def git_push_per_commit(args):
     dir = args.dir
+    work_branch = args.branch
     remote = args.remote
     if not is_git_repo(dir):
         print('请提供 GIT 本地仓库')
         return
-        
+    # 检查分支是否存在
+    branches = get_all_branches(dir)
+    if work_branch not in branches:
+        print(f'分支 {work_branch} 不存在')
+        return
     # 如果远程仓库名为地址，创建别名
     if remote.startswith('https://') or \
         remote.startswith('git@'):
@@ -145,8 +150,6 @@ def git_push_per_commit(args):
         print(f'远程仓库 {remote} 不存在')
         return
             
-    # 获取当前分支名称
-    work_branch = get_cur_branch(dir)
     # 检查远程库是否有该分支
     subp.Popen(
         ['git', 'remote', 'update', remote],
