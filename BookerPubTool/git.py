@@ -20,9 +20,8 @@ def set_remote(dir, name, url):
     # 判断是否有远程库
     remotes = get_remote_names(dir)
     if name in remotes:
-        cmd = ['git', 'remote', 'set-url', name, url]
-    else:
-        cmd = ['git', 'remote', 'add', name, url]
+        cmd = ['git', 'remote', 'rm', name]
+    cmd = ['git', 'remote', 'add', name, url]
     subp.Popen(cmd, shell=True, cwd=dir).communicate()
     
 
