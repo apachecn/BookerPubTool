@@ -114,7 +114,7 @@ def get_all_branches(dir):
         stderr=subp.PIPE,
     ).communicate()[0].decode('utf8').split('\n')
     branches = [b[2:] for b in branches]
-    return branches
+    return list(filter(None, branches))
 
 def get_branch_cids(dir, *branches):
     if platform.system().lower() == 'windows':
