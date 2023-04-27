@@ -34,6 +34,7 @@ def calc_md5(bts):
 def proc_info(fname, info):
     hdlrs = {
         'lightnovel': proc_ln_info,
+        'biquge': proc_bqg_info,
         'giantessnight': proc_gn_info,
         'it-ebooks': proc_itebooks_info,
         'dmzj': proc_dmzj_info,
@@ -58,6 +59,12 @@ def proc_itebooks_info(fname, info):
     info['authors'] = 'it-ebooks'
     info['publisher'] = 'iBooker it-ebooks'
     
+def proc_bqg_info(fname, info):
+    ori_info = path.basename(fname) \
+        .replace('.epub', '').split(' - ')
+    info['authors'] = ori_info[1]
+    info['edition'] = ori_info[2]
+    info['publisher'] = 'BiQuGe'
 
 def proc_ln_info(fname, info):
     ori_info = path.basename(fname) \
@@ -210,7 +217,11 @@ def upload_libgen(args):
         }
     
     cate = series
-    if series in ['lightnovel', 'dmzj', 'nhentai', 'giantessnight']:
+    if series in [
+        'lightnovel', 'biquge', 
+        'dmzj', 'nhentai', 
+        'giantessnight'
+    ]:
         cate = 'fiction'
     elif series in ['it-ebooks', 'ixinzhi']:
         cate = 'main'
