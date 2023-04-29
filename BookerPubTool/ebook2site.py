@@ -52,6 +52,7 @@ def ebook2site_handle(args):
     name = args.name
     fname = args.file
     dir = args.dir
+    suff = args.suffix
         
     if not fname.endswith('.pdf') and \
        not fname.endswith('.epub'):
@@ -59,6 +60,9 @@ def ebook2site_handle(args):
         return 
     
     if not name: name = gen_proj_name(path.basename(fname))
+    if suff:
+        suff = gen_proj_name(suff)
+        if suff: name += '-' + suff
     proj_dir = path.join(dir, name)
     ebook2site(fname, proj_dir)
     
